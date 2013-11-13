@@ -1,0 +1,140 @@
+/**
+ * Primary styles (Based on Solarize by Ethan Schoonover)
+ */
+
+@base03:    #002b36;
+@base02:    #073642;
+@base01:    #586e75;
+@base00:    #657b83;
+@base0:     #839496;
+@base1:     #93a1a1;
+@base2:     #eee8d5;
+@base3:     #fdf6e3;
+@yellow:    #b58900;
+@orange:    #cb4b16;
+@red:       #dc322f;
+@magenta:   #d33682;
+@violet:    #6c71c4;
+@blue:      #268bd2;
+@cyan:      #2aa198;
+@green:     #859900;
+
+.solarize(@rebase03,@rebase02,@rebase01,@rebase00,@rebase0,@rebase1,@rebase2,@rebase3) 
+{
+    * { color:@rebase0; }
+    body { background-color:@rebase03; }
+    h1,h2,h3,h4,h5,h6 { color:@rebase1; border-color: @rebase0; }
+    a, a:active { color: @blue; }
+    a:visited { color: @violet; }
+    a:hover { background-color: @rebase02 }
+    header, footer {
+        background-color: @rebase02;
+        color: @rebase01;
+    }
+    pre {
+        color: @rebase1;
+        background-color: @rebase02;
+    }
+}
+
+html, html.light {
+    .solarize(@base3, @base2, @base1, @base0, @base00, @base01, @base02, @base03);
+}
+    
+
+html.dark {
+    .solarize(@base03, @base02, @base01, @base00, @base0, @base1, @base2, @base3);
+}
+
+.yellow {
+    color: @yellow;
+}
+
+.orange {
+    color: @orange;
+}
+
+.red {
+    color: @red;
+}
+
+.magenta {
+    color: @magenta;
+}
+
+.violet {
+    color: @violet;
+}
+
+.blue {
+    color: @blue;
+}
+
+.cyan {
+    color: @cyan;
+}
+
+.green {
+    color: @green;
+}
+
+* {
+    margin: 0px;
+}
+
+.maximize() {
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+}
+
+body {
+    .maximize();
+}
+
+header {
+    .maximize();
+    height: 1.4em;
+    bottom: auto;
+}
+
+footer {
+    .maximize();
+    height: 1.4em;
+    top: auto;
+}
+
+div.main {
+    .maximize();
+    top:1.4em;
+    bottom: 1.4em;
+    text-align: center;
+    img {
+        max-width: 100%;
+        max-height: 100%;
+        width: auto;
+        height: auto;
+        display: inline;
+    }
+}
+header, footer {
+    div {
+        position: absolute;
+    }
+    :nth-child(1) {
+        left: 0px;
+        width: 8em;
+    }
+    :nth-child(2) {
+        left: 8em;
+        right: 8em;
+        text-align: center;
+    }
+    :nth-child(3) {
+        right: 0px;
+        width: 8em;
+        text-align: right;
+    }
+}
