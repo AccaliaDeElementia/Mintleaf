@@ -1,0 +1,126 @@
+/*jslint node:true, maxlen:80 */
+/* vim: set filetype=javascript syntax=javascript: */
+
+'use strict';
+
+var sqlite = require('sqlite3'),
+    fs = require('fs'),
+    async = require('async'),
+    extensions = /[.](jpg|jpeg|png|gif)$/i;
+
+function init(done) {
+    var self = this;
+    self.db.run('SELECT 1 FROM dirs LIMIT 1', function (err) {
+        if (!err) {
+            done(null);
+            return;
+        }
+        self.db.run('CREATE TABLE dirs (' +
+            '  id INT PRIMARY KEY,' +
+            '  parent INT NULL,' +
+            '  name VARCHAR(255) NOT NULL,' +
+            '  FOREIGN KEY(parent) REFERENCES dirs(id)' +
+            ');', function (err) {
+                if (err) {
+                    return done(err);
+                }
+
+                self.db.run('CREATE TABLE images (' +
+                    '  id INT PRIMARY KEY,' +
+                    '  dir INT,' +
+                    '  name VARCHAR(255),' +
+                    '  path VARCHAR(4096)' +
+                    ');', done);
+            });
+    });
+}
+
+function insertDir(self, parent, name, callback) {
+    self.db.run('INSERT INTO dirs (' +
+        '  parent,' +
+        '  name' +
+        ') VALUES (' +
+        '  @parent,' +
+        '  @name' +
+        ')', {
+            '@parent': parent,
+            '@name': name
+        }, function (err) {
+            callback(err, this.lastID);
+        });
+}
+
+function insertImage(self, parent, name, path, callback) {
+    self.db.run('INSERT INTO images (' +
+        '  dir,' +
+        '  name,' +
+        '  path' +
+        ') VALUES (' +
+        '  @dir,' +
+        '  @name,' +
+        '  @path' +
+        ')', {
+            '@dir': parent,
+            '@name': name,
+            '@path': path
+        }, function (err) {
+            if (err) {
+                return callback(err, null);
+            }
+            callback(undefined, this.lastID);
+        });
+
+}
+function basename(path) {
+    var regex = new RegExp('[^/]+$');
+    return regex.exec(path)[0];
+}
+
+function walk(path, parent, each, complete) {
+    var self = this,
+        name = basename(path);
+    if (!parent) {
+        name = '/';
+    }
+    insertDir(self, parent, name, function (err, root) {
+        if (err) {
+            return complete(err);
+        }
+        fs.readdir(path, function (err, list) {
+            if (err) {
+                return complete(err);
+            }
+            async.each(list, function (item, callback) {
+                var target = path + '/' + item;
+                fs.stat(target, function (err, stat) {
+                    if (err) {
+                        return callback(err);
+                    }
+                    if (extensions.test(item)) {
+                        insertImage(self, root, item, target,
+                            function (err, id) {
+                                if (err) {
+                                    return console.error(err);
+                                }
+                                console.log(id + ': ' + target);
+                            });
+                    }
+                    if (stat.isDirectory()) {
+                        return self.walk(target, root, each, callback);
+                    }
+                    callback();
+                });
+            }, complete);
+        });
+    });
+}
+
+module.exports = function Mintleaf(database) {
+    var self = this;
+    if (!database) {
+        database = process.mainModule.filename.replace(/[.]js$/, '') + '.db';
+    }
+    self.db = new sqlite.Database(database);
+    self.init = init;
+    self.walk = walk;
+};

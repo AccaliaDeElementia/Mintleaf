@@ -1,0 +1,33 @@
+{
+  "name": "Mintleaf",
+  "preferGlobal": false,
+  "version": "0.0.1",
+  "author": "Accalia de Elementia <accalia.de.elementia@gmail.com>",
+  "description": "A html5 filesystem based image gallery",
+  "contributors": [],
+  "bin": {},
+  "scripts": {
+    "start": "node ./bin/mintleaf"
+  },
+  "main": "./lib/mintleaf",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AccaliaDeElementia/Mintleaf"
+  },
+  "keywords": [
+    "gallery",
+    "image"
+  ],
+  "dependencies": {
+    "sqlite3": "~2.1.19",
+    "async": "~0.2.9",
+    "event-stream": "~3.0.16"
+  },
+  "analyze": true,
+  "devDependencies": {},
+  "bundledDependencies": [],
+  "license": "MIT",
+  "engines": {
+    "node": ">=0.10"
+  }
+}
