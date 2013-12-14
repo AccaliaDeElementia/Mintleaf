@@ -6,9 +6,7 @@
   "description": "A html5 filesystem based image gallery",
   "contributors": [],
   "bin": {},
-  "scripts": {
-    "start": "node ./bin/mintleaf"
-  },
+  "scripts": {},
   "main": "./lib/mintleaf",
   "repository": {
     "type": "git",
@@ -19,9 +17,12 @@
     "image"
   ],
   "dependencies": {
-    "sqlite3": "~2.1.19",
     "async": "~0.2.9",
-    "event-stream": "~3.0.16"
+    "event-stream": "~3.0.16",
+    "mime": "~1.2.11",
+    "base64-stream": "~0.1.2",
+    "stream-reduce": "~1.0.1",
+    "socket.io": "~0.9.16"
   },
   "analyze": true,
   "devDependencies": {},

@@ -3,124 +3,76 @@
 
 'use strict';
 
-var sqlite = require('sqlite3'),
-    fs = require('fs'),
+var fs = require('fs'),
     async = require('async'),
-    extensions = /[.](jpg|jpeg|png|gif)$/i;
+    es = require('event-stream'),
+    reduce = require('stream-reduce'),
+    base64 = require('base64-stream'),
+    mime = require('mime'),
+    i = 0;
 
-function init(done) {
-    var self = this;
-    self.db.run('SELECT 1 FROM dirs LIMIT 1', function (err) {
-        if (!err) {
-            done(null);
-            return;
-        }
-        self.db.run('CREATE TABLE dirs (' +
-            '  id INT PRIMARY KEY,' +
-            '  parent INT NULL,' +
-            '  name VARCHAR(255) NOT NULL,' +
-            '  FOREIGN KEY(parent) REFERENCES dirs(id)' +
-            ');', function (err) {
-                if (err) {
-                    return done(err);
-                }
-
-                self.db.run('CREATE TABLE images (' +
-                    '  id INT PRIMARY KEY,' +
-                    '  dir INT,' +
-                    '  name VARCHAR(255),' +
-                    '  path VARCHAR(4096)' +
-                    ');', done);
-            });
-    });
-}
-
-function insertDir(self, parent, name, callback) {
-    self.db.run('INSERT INTO dirs (' +
-        '  parent,' +
-        '  name' +
-        ') VALUES (' +
-        '  @parent,' +
-        '  @name' +
-        ')', {
-            '@parent': parent,
-            '@name': name
-        }, function (err) {
-            callback(err, this.lastID);
-        });
-}
-
-function insertImage(self, parent, name, path, callback) {
-    self.db.run('INSERT INTO images (' +
-        '  dir,' +
-        '  name,' +
-        '  path' +
-        ') VALUES (' +
-        '  @dir,' +
-        '  @name,' +
-        '  @path' +
-        ')', {
-            '@dir': parent,
-            '@name': name,
-            '@path': path
-        }, function (err) {
-            if (err) {
-                return callback(err, null);
-            }
-            callback(undefined, this.lastID);
-        });
-
-}
-function basename(path) {
-    var regex = new RegExp('[^/]+$');
-    return regex.exec(path)[0];
-}
-
-function walk(path, parent, each, complete) {
-    var self = this,
-        name = basename(path);
-    if (!parent) {
-        name = '/';
-    }
-    insertDir(self, parent, name, function (err, root) {
+function listdir(path, callback) {
+    var fullpath = this.base + path.replace(/\/$/, ''),
+        basepath = path.replace(/\/$/, '');
+    fs.readdir(fullpath, function (err, items) {
         if (err) {
-            return complete(err);
+            return callback(err);
         }
-        fs.readdir(path, function (err, list) {
+        var paths = items.map(function (path) {
+            return fullpath + '/' + path;
+        });
+        async.map(paths, fs.stat, function (err, results) {
             if (err) {
-                return complete(err);
+                return callback(err);
             }
-            async.each(list, function (item, callback) {
-                var target = path + '/' + item;
-                fs.stat(target, function (err, stat) {
-                    if (err) {
-                        return callback(err);
+            var result = {
+                'dirs': [],
+                'files': []
+            };
+            results.forEach(function (item, idx) {
+                var path1 = basepath + '/' + items[idx],
+                    path2 = fullpath + '/' + items[idx];
+
+                if (item.isDirectory()) {
+                    result.dirs.push(path1);
+                } else {
+                    if (/^image/.test(mime.lookup(path2))) {
+                        result.files.push(path1);
                     }
-                    if (extensions.test(item)) {
-                        insertImage(self, root, item, target,
-                            function (err, id) {
-                                if (err) {
-                                    return console.error(err);
-                                }
-                                console.log(id + ': ' + target);
-                            });
-                    }
-                    if (stat.isDirectory()) {
-                        return self.walk(target, root, each, callback);
-                    }
-                    callback();
-                });
-            }, complete);
+                }
+            });
+            callback(undefined, result);
         });
     });
 }
 
-module.exports = function Mintleaf(database) {
-    var self = this;
-    if (!database) {
-        database = process.mainModule.filename.replace(/[.]js$/, '') + '.db';
+function getfile(path, callback) {
+    if (typeof path !== 'string') {
+        return callback('Path must be a string!');
     }
-    self.db = new sqlite.Database(database);
-    self.init = init;
-    self.walk = walk;
+    var type = mime.lookup(path),
+        pipeline;
+    if (!/^image/.test(type)) {
+        return callback(type + ' is not an image!');
+    }
+    pipeline = es.pipeline(
+        fs.createReadStream(this.base + path),
+        base64.encode(),
+        reduce(function (iv, data) {
+            return iv + data;
+        }, ''),
+        es.map(function (data, cb) {
+            callback(undefined, 'data:' + type + ';base64,' + data);
+            cb();
+        })
+    );
+    pipeline.on('error', function (e) {
+        callback(e);
+    });
+}
+
+module.exports = function Mintleaf(base) {
+    this.base = base;
+    this.listdir = listdir.bind(this);
+    this.getfile = getfile.bind(this);
 };

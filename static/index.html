@@ -5,34 +5,57 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <title>Mintleaf Image Viewer</title>
         <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+        <link rel="stylesheet" href="css/jquery.mobile.structure.min.css">
         <link rel="stylesheet" href="css/Mintleaf.css">
     </head>
     <body>
         <header>
             <div>
-                <a href="#">&lt;= Prev</a>>
+                <a class="prev" href="#">&lt;= Prev</a>
             </div>
             <div>
-                <a href="#">Name</a>
+                <a class="name" href="#">Name</a>
             </div>
             <div>
-                <a href="#">Next =&gt;</a>
+                <a class="next" href="#">Next =&gt;</a>
             </div>
         </header>
         <div class="main">
-            <img class="slide" src="image/imgur/Wallpapers/A_lucky_strawberry-LOTyr.jpg" />
+            <img class="slide" src="image/404tan.png" />
         </div>
         <footer>
             <div>
-                <a href="#">&lt;= Prev Dir</a>
+                <a class="prevdir" href="#">&lt;= Prev Dir</a>
             </div>
             <div>
-                <a href="#">Dir</a>
+                <a class="dirname" href="#">Dir</a>
             </div>
             <div>
-                <a href="#">Next Dir =&gt;</a>
+                <a class="nextdir" href="#">Next Dir =&gt;</a>
             </div>
         </footer>
+        <div class="overlay loading">
+            <div>
+                <img src="image/loading.gif" /><br />
+                Loading&#8230;
+            </div>
+        </div>
+        <div class="overlay files">
+            <div>
+                <div>Files:</div>
+                <div class="filelist"></div>
+            </div>
+        </div>
+        <div class="overlay dirs">
+            <div>
+                <div class="parentdir"><a href="#">Up one level</a></div>
+                <div class="dirlist"></div>
+            </div>
+        </div>
+        <script type="text/javascript" src="js/jquery.min.js"></script>
+        <script type="text/javascript" src="js/jquery.mobile-1.3.2.js"></script>
+        <script type="text/javascript" src="js/socket.io.min.js"></script>
+        <script type="text/javascript" src="js/Mintleaf.js"></script>
     </body>
 </html>
