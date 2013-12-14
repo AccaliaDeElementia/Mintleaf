@@ -1,5 +1,5 @@
 *.swp
 *.bak
 *~
-node_modules
+*.pyc
 
