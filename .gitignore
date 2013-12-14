@@ -2,4 +2,6 @@
 *.bak
 *~
 *.pyc
-
+/bin
+/include
+/lib
