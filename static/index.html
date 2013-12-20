@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Mintleaf Image Viewer</title>
+        <meta name="description" content="HTML5 Touch Compatible Image Gallery backed by a python3 RESTful webservice">
+        <meta name="viewport"content="width=device-width, initial-scale=1, minimum-scale=1">
+        <link rel="stylesheet" href="css/themes/solarized.min.css"/>
+        <link rel="stylesheet" href="css/themes/jquery.mobile.icons.min.css" />
+        <link rel="stylesheet" href="//code.jquery.com/mobile/1.4.0-rc.1/jquery.mobile.structure-1.4.0-rc.1.min.css" /> 
+        <script src="//code.jquery.com/jquery-2.0.3.min.js"></script> 
+        <script src="//code.jquery.com/mobile/1.4.0-rc.1/jquery.mobile-1.4.0-rc.1.min.js"></script> 
+    </head>
+    <body>
+        <!-- Home -->
+        <div data-theme="j" data-role="page" id="main">
+            <div data-role="header" data-position="fixed">
+                <a data-role="button" href="#main" class="ui-btn-left">
+                    Button
+                </a>
+                <a data-role="button" href="#main" class="ui-btn-right">
+                    Button
+                </a>
+                <h3>
+                    Mintleaf Image Viewer
+                </h3>
+            </div>
+            <div data-role="content" style="position: absolute; top: 2.8em; left:0px; right:0px; bottom: 2.7em; padding: 0px;">
+                <img src="404tan.png" alt="image" style="display: block; margin-right: auto; margin-left: auto; width: auto; height: auto; max-width: 100%; max-height:100%;">
+            </div>
+            <div data-role="footer" data-position="fixed">
+                <h3>
+                    Footer
+                </h3>
+                <a data-role="button" href="#main" class="ui-btn-right">
+                    Button
+                </a>
+                <a data-role="button" href="#main" class="ui-btn-left">
+                    Button
+                </a>
+            </div>
+        </div>
+        <div data-theme="j" data-role="page" id="filelist">
+            <div>Files:</div>
+            <div id="FileContainer">
+            </div>
+        </div>
+        <div data-theme="j" data-role="page" id="dirlist">
+            <div>Directories</div>
+            <div id="DirContainer"></div>
+        </div>
+        <script src="js/Mintleaf.js"></script>
+    </body>
+</html>
