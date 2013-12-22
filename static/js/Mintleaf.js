@@ -14,7 +14,13 @@
     function getdir(path, oncomplete) {
         $.getJSON('/listdir' + path, oncomplete);
     }
-    getdir('/imgur', function () {
-        console.dir(arguments);
+    getdir('/imgur', function (dir) {
+        var files = $('#FileContainer');
+        files.empty();
+        dir.files.forEach(function (item) {
+            files.append('<li>' + basename(item) + '</li>');
+        });
+        $('#FileContainer').listview('refresh');
+        $('#filelist').trigger('updatelayout');
     });
 }(jQuery));

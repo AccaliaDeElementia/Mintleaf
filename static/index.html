@@ -8,9 +8,9 @@
         <meta name="viewport"content="width=device-width, initial-scale=1, minimum-scale=1">
         <link rel="stylesheet" href="css/themes/solarized.min.css"/>
         <link rel="stylesheet" href="css/themes/jquery.mobile.icons.min.css" />
-        <link rel="stylesheet" href="//code.jquery.com/mobile/1.4.0-rc.1/jquery.mobile.structure-1.4.0-rc.1.min.css" /> 
+        <link rel="stylesheet" href="//code.jquery.com/mobile/1.4.0/jquery.mobile.structure-1.4.0.min.css" /> 
         <script src="//code.jquery.com/jquery-2.0.3.min.js"></script> 
-        <script src="//code.jquery.com/mobile/1.4.0-rc.1/jquery.mobile-1.4.0-rc.1.min.js"></script> 
+        <script src="//code.jquery.com/mobile/1.4.0/jquery.mobile-1.4.0.min.js"></script> 
     </head>
     <body>
         <!-- Home -->
@@ -36,14 +36,12 @@
                 <a data-role="button" href="#main" class="ui-btn-right">
                     Button
                 </a>
-                <a data-role="button" href="#main" class="ui-btn-left">
+                <a data-role="button" href="#filelist" class="ui-btn-left">
                     Button
                 </a>
             </div>
-        </div>
-        <div data-theme="j" data-role="page" id="filelist">
-            <div>Files:</div>
-            <div id="FileContainer">
+            <div data-theme="j" data-role="panel" data-position="right" data-display="overlay" id="filelist">
+                <ul data-role="listview" data-autodividers="true" data-filter="true" id="FileContainer"></ul>
             </div>
         </div>
         <div data-theme="j" data-role="page" id="dirlist">
