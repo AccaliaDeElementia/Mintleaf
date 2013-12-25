@@ -142,6 +142,12 @@
         $('#navpanel').trigger('updatelayout');
     }
 
+    function loadEmptyPlaceholder() {
+        $('#HeaderTitle,title').text('Nobody here but us chickens...');
+        $('#FooterTitle').text(path + ' (0/0)');
+        $('#page').attr('src', '404tan.png');
+    }
+
     doLoadDir = function realDoLoadDir(item) {
         var target = decodeURIComponent($(this).jqmData('dest'));
         if (item && typeof item === 'string') {
@@ -155,7 +161,6 @@
         getdir(target, function (dir) {
             directory = dir;
             if (dirname(path) !== '/') {
-                dir.dirs.unshift('..');
                 getdir(dirname(path), function (dir) {
                     parentdir = dir;
                     loadParent();
@@ -164,7 +169,11 @@
             loadFiles();
             loadDirs();
             $.mobile.loading('hide');
-            doLoadFile(dir.files[getLastIndex()]);
+            if (dir.files.length > 0) {
+                doLoadFile(dir.files[getLastIndex()]);
+            } else {
+                loadEmptyPlaceholder();
+            }
         });
         try {
             $('#navpanel').panel('close');
@@ -203,7 +212,7 @@
     });
 
     function nextFolder() {
-        if (!parentdir) { return; } 
+        if (!parentdir) { return; }
         var i = parentdir.dirs.indexOf(path) + 1;
         if (parentdir.dirs[i]) {
             doLoadDir(parentdir.dirs[i]);
@@ -219,6 +228,12 @@
         }
     }
     $('#PrevFolder').click(prevFolder);
+
+    $('.UpOneLevel').click(function () {
+        var target = dirname(path);
+        if (target === path) { return; }
+        doLoadDir(target);
+    });
 
     $("#main div:jqmData(role='content')").swipeleft(function () {
         $('#navpanel').panel('open');
