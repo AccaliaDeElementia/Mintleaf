@@ -86,11 +86,13 @@ def listdir_get (path=''):
         'files': []
     }
     base = prefix+path
+    if path and path[0] != '/':
+        path = '/' + path
     for item in sortit(os.listdir(base), lambda x: x.lower()):
         safepath = path + '/' + item
         filename = base + '/' + item
         if os.path.isdir(filename):
-            retval['dirs'].append(safepath)
+            retval['dirs'].append(safepath + '/')
         else:
             types = mimetypes.guess_type(filename)
             if types[0] and types[0].startswith('image/'):

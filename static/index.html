@@ -11,42 +11,58 @@
         <link rel="stylesheet" href="//code.jquery.com/mobile/1.4.0/jquery.mobile.structure-1.4.0.min.css" /> 
         <script src="//code.jquery.com/jquery-2.0.3.min.js"></script> 
         <script src="//code.jquery.com/mobile/1.4.0/jquery.mobile-1.4.0.min.js"></script> 
+        <script>
+            $.mobile.loading('show', {
+                'textVisible': true,
+                'theme': 'm'
+            }); 
+        </script>
     </head>
     <body>
         <!-- Home -->
         <div data-theme="j" data-role="page" id="main">
             <div data-role="header" data-position="fixed">
-                <a data-role="button" href="#main" class="ui-btn-left">
-                    Button
+                <a data-role="button" href="#main" class="ui-btn-right" id="NextPage">
+                    Next =&gt;
                 </a>
-                <a data-role="button" href="#main" class="ui-btn-right">
-                    Button
+                <a data-role="button" href="#main" class="ui-btn-left" id="PrevPage">
+                    &lt;= Previous
                 </a>
-                <h3>
+                <h3 id="HeaderTitle">
                     Mintleaf Image Viewer
                 </h3>
             </div>
-            <div data-role="content" style="position: absolute; top: 2.8em; left:0px; right:0px; bottom: 2.7em; padding: 0px;">
-                <img src="404tan.png" alt="image" style="display: block; margin-right: auto; margin-left: auto; width: auto; height: auto; max-width: 100%; max-height:100%;">
+            <div data-role="content" style="position: fixed; top: 2.8em; left:0px; right:0px; bottom: 2.7em; padding: 0px;">
+                <img id="page" src="404tan.png" alt="image" style="display: block; margin-right: auto; margin-left: auto; width: auto; height: auto; max-width: 100%; max-height:100%;">
             </div>
             <div data-role="footer" data-position="fixed">
-                <h3>
-                    Footer
+                <h3 id="FooterTitle">
+                    Mintleaf Footer Text
                 </h3>
-                <a data-role="button" href="#main" class="ui-btn-right">
-                    Button
+                <a data-role="button" href="#main" class="ui-btn-right" id="NextFolder">
+                    Next Folder = &gt;
                 </a>
-                <a data-role="button" href="#filelist" class="ui-btn-left">
-                    Button
+                <a data-role="button" href="#main" class="ui-btn-left" id="PrevFolder">
+                    &lt;= Previous Folder
                 </a>
             </div>
-            <div data-theme="j" data-role="panel" data-position="right" data-display="overlay" id="filelist">
-                <ul data-role="listview" data-autodividers="true" data-filter="true" id="FileContainer"></ul>
+            <div data-theme="j" data-role="panel" data-position="right" data-display="overlay" id="navpanel">
+                <div data-role="collapsible-set">
+                    <div data-role="collapsible">
+                        <h3>Files</h3>
+                        <div data-role="collapsible-set" id="FileContainer">
+                        </div>
+                    </div>
+                    <div data-role="collapsible">
+                        <h3>Directories</h3>
+                        <div data-role="collapsible-set" id="DirContainer"></div>
+                    </div>
+                    <div data-role="collapsible">
+                        <h3>Parent Directory</h3>
+                        <div data-role="collapsible-set" id="ParentContainer"></div>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div data-theme="j" data-role="page" id="dirlist">
-            <div>Directories</div>
-            <div id="DirContainer"></div>
         </div>
         <script src="js/Mintleaf.js"></script>
     </body>
